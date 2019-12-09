@@ -15,7 +15,12 @@ function fatfonts() {
 
     for (let i = 1; i < 10; i++) {
         cubica(i).then((cubica) => {
-            svg.append("g").html(cubica);
+            let num = svg.append("g").html(cubica);
+            num.select("svg")
+                .attr("x",100*i)
+                .attr("y",-10)
+                .attr("width",100)
+                .attr("height",100);
         })
     }
 }
