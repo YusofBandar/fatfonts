@@ -1,21 +1,26 @@
-window.onload = fatfonts;
+window.onload = function () {
+    const data = [1, 2, 2, 6, 9, 9, 9, 9, 2, 1, 4, 4, 4, 4, 5, 6, 7, 8];
+
+    fatfonts(data);
+};
 
 
-function fatfonts() {
+function fatfonts(data) {
+    const width = 1000;
+    const height = 1000;
 
-    const width = 2000;
-    const height = 2000;
+    const xLength = data.length;
 
     let svg = d3.select("#fatfonts")
         .append("svg")
         .attr("width", width)
         .attr("height", height)
-        .attr("viewBox", "0 0 2000 2000");
+        .attr("viewBox", "0 0 1000 1000");
 
-    const sizes = sizeNums(9, 9, width, height)
-    for (let i = 1; i < 10; i++) {
-        cubica(i).then((cubica) => {
-            const coord = positionNums(i - 1, i - 1, 9, 9, width, height);
+    const sizes = sizeNums(xLength, 2, width, height)
+    for (let i = 0; i < xLength; i++) {
+        cubica(data[i]).then((cubica) => {
+            const coord = positionNums(i, 0, xLength, 1, width, height);
 
             let num = svg.append("g").html(cubica);
             num.select("svg")
