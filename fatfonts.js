@@ -30,8 +30,8 @@ function fatfonts(data) {
 
         for (let j = 0; j < data[i].length; j++) {
             cubica(data[i][j]).then((cubica) => {
-                const coord = positionNums(j, i, data[i].length, xLength, width, height);
-                drawFont(svg,cubica,coord[0],i*size,size);
+                const coord = positionNums(j, i, size);
+                drawFont(svg,cubica,coord[0],coord[1],size);
             })
         }
     }
@@ -54,9 +54,9 @@ function sizeNums(xLength, yLength, width, height) {
     return [dx, dy];
 }
 
-function positionNums(x, y, xLength, yLength, width, height) {
-    const xPos = x * (width / xLength);
-    const yPos = y * (height / yLength);
+function positionNums(x, y, size) {
+    const xPos = x * size;
+    const yPos = y * size;
     return [xPos, yPos];
 }
 
