@@ -4,6 +4,7 @@ window.onload = function () {
     fatfonts(data);
 };
 
+
 function fatfonts(data) {
     const width = 1000;
     const height = 1000;
@@ -18,7 +19,6 @@ function fatfonts(data) {
 
     let files = loadFont("cubica")
     Promise.all(files).then((numbers) => {
-        
         for (let i = 0; i < xLength; i++) {
             let size = sizeNums(data[i].length, 1, width, height);
             size = Math.min(size[0], size[1]);
@@ -26,9 +26,11 @@ function fatfonts(data) {
             for (let j = 0; j < data[i].length; j++) {
                 let pos = cubicaFont(100, j, i, size);
                 let next = pos.next;
-
+                let nn = next.next;
                 let group = svg.append("g");
-                drawFont(group, numbers[5], next.x, next.y, next.size)
+
+                drawFont(group, numbers[0], nn.x, nn.y, nn.size)
+                drawFont(group, numbers[0], next.x, next.y, next.size)
                 drawFont(group, numbers[data[i][j] - 1], pos.x, pos.y, pos.size);
             }
         }
@@ -74,17 +76,20 @@ function cubicaFont(num, x, y, size) {
 }
 
 function _cubicaFont(pos, num, x, y, size) {
-    if (pos >= num.length) return
+    if (pos >= 3) return
 
-    const xScaler = 0.4 * pos;
-    const yScaler = 0.4 * pos;
-    const sizeScaler = 0.35 * pos;
+    const xScaler = 0.4;
+    const yScaler = 0.4;
+    const sizeScaler = 0.35;
 
-    return {
+    let obj = {
         x: (x + size) - (size * xScaler),
         y: (y + size) - (size * yScaler),
         size: size * sizeScaler
     }
+
+    obj.next = _cubicaFont(pos+1, 1, obj.x, obj.y, obj.size);
+    return obj;
 
 
 }
