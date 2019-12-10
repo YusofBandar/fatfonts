@@ -4,8 +4,6 @@ window.onload = function () {
     fatfonts(data);
 };
 
-//
-
 function fatfonts(data) {
     const width = 1000;
     const height = 1000;
