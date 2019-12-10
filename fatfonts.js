@@ -1,12 +1,5 @@
 window.onload = function () {
-    const data = [[1, 2, 2, 6, 9, 9, 9, 9, 2, 1, 4, 4],
-    [1, 9, 2, 6, 9, 9, 9, 9, 2, 1, 4, 4],
-    [1, 8, 2, 6, 9, 9, 9, 9, 2, 1, 4, 4],
-    [1, 7, 2, 6, 9, 9, 9, 9, 2, 1, 4, 4],
-    [1, 6, 2, 6, 9, 9, 9, 9, 2, 1, 4, 4],
-    [1, 5, 2, 6, 2, 2, 2, 2, 2, 1, 4, 4],
-    [1, 2, 2, 6, 1, 2, 7, 7, 7, 1, 4, 4],
-    [1, 2, 2, 6, 9, 9, 9, 9, 2, 1, 4, 4]];
+    const data = [[1, 2, 3, 4, 5, 6, 7, 8, 9]];
 
     fatfonts(data);
 };
@@ -24,17 +17,19 @@ function fatfonts(data) {
         .attr("height", height)
         .attr("viewBox", "0 0 1000 1000");
 
-    for (let i = 0; i < xLength; i++) {
-        let size = sizeNums(data[i].length, 1, width, height);
-        size = Math.min(size[0], size[1]);
+    let files = loadFont("cubica")
+    Promise.all(files).then((numbers) => {
+        for (let i = 0; i < xLength; i++) {
+            let size = sizeNums(data[i].length, 1, width, height);
+            size = Math.min(size[0], size[1]);
 
-        for (let j = 0; j < data[i].length; j++) {
-            cubica(data[i][j]).then((cubica) => {
+            for (let j = 0; j < data[i].length; j++) {
                 const coord = positionNums(j, i, size);
-                drawFont(svg,cubica,coord[0],coord[1],size);
-            })
+                drawFont(svg, numbers[data[i][j]-1], coord[0], coord[1], size);
+            }
         }
-    }
+    })
+
 }
 
 
@@ -60,6 +55,11 @@ function positionNums(x, y, size) {
     return [xPos, yPos];
 }
 
+function loadFont(font) {
+    let fonts;
+    if(font === "cubica") fonts = cubica;
+    return files = [1, 2, 3, 4, 5, 6, 7, 8, 9].map(num => fonts(num));
+}
 
 function cubica(num) {
     const file = `cubica_${num}.svg`;
