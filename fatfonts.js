@@ -1,5 +1,5 @@
 window.onload = function () {
-    const data = [[1, 1, 1, 1, 1, 1, 1, 1]];
+    const data = [[11, 1, 11, 11, 1, 1, 111, 11]];
 
     fatfonts(data);
 };
@@ -24,14 +24,10 @@ function fatfonts(data) {
             size = Math.min(size[0], size[1]);
 
             for (let j = 0; j < data[i].length; j++) {
-                let pos = cubicaFont(100, j, i, size);
-                let next = pos.next;
-                let nn = next.next;
+                let pos = cubicaFont(data[i][j], j, i, size);
                 let group = svg.append("g");
 
-                drawFont(group, numbers[0], nn.x, nn.y, nn.size)
-                drawFont(group, numbers[0], next.x, next.y, next.size)
-                drawFont(group, numbers[data[i][j] - 1], pos.x, pos.y, pos.size);
+                drawFont(group, numbers[0], pos)
             }
         }
     })
@@ -40,13 +36,19 @@ function fatfonts(data) {
 
 
 
-function drawFont(node, svg, x, y, size) {
-    let num = node.append("g").html(svg);
-    num.select("svg")
-        .attr("x", x)
-        .attr("y", y)
-        .attr("width", size)
-        .attr("height", size);
+function drawFont(node, svg, number) {
+    let next = number
+
+    while (next) {
+        let num = node.append("g").html(svg);
+        num.select("svg")
+            .attr("x", next.x)
+            .attr("y", next.y)
+            .attr("width", next.size)
+            .attr("height", next.size);
+        next = next.next;
+    }
+
 }
 
 function sizeNums(xLength, yLength, width, height) {
@@ -76,8 +78,9 @@ function cubicaFont(num, x, y, size) {
 }
 
 function _cubicaFont(pos, num, x, y, size) {
-    if (pos >= 3) return
+    if (pos >= num.length || pos >= 5) return
 
+    //TODO need to work out scalers for other numbers
     const xScaler = 0.4;
     const yScaler = 0.4;
     const sizeScaler = 0.35;
@@ -88,10 +91,11 @@ function _cubicaFont(pos, num, x, y, size) {
         size: size * sizeScaler
     }
 
-    obj.next = _cubicaFont(pos+1, 1, obj.x, obj.y, obj.size);
+    let next = _cubicaFont(pos + 1, num, obj.x, obj.y, obj.size);
+    if (next) {
+        obj.next = next;
+    }
     return obj;
-
-
 }
 
 function loadFont(font) {
