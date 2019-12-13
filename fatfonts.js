@@ -1,5 +1,5 @@
 window.onload = function () {
-    const data = [[91, 33333, 22222, 111111]];
+    const data = [[1, 2, 3, 111111]];
 
     fatfonts(data);
 };
@@ -25,7 +25,7 @@ function fatfonts(data) {
 
             for (let j = 0; j < data[i].length; j++) {
                 let font = cubicaFont(data[i][j], j, i, size);
-
+                console.log(font);
                 let group = svg.append("g");
                 drawFont(group, svgs, font)
             }
@@ -40,6 +40,8 @@ function drawFont(node, svgs, font) {
     let next = font;
 
     while (next) {
+        if(node.number === 0) continue;
+
         let num = node.append("g").html(svgs[next.number - 1]);
         num.select("svg")
             .attr("x", next.x)
@@ -63,6 +65,11 @@ function positionNums(x, y, size) {
     return [xPos, yPos];
 }
 
+function numToString(num){
+    let str = num.toString();
+    return str.length <=1 ? "0" + str : str;
+}
+
 function cubicaFont(num, x, y, size) {
     let coord = positionNums(x, y, size);
 
@@ -70,11 +77,11 @@ function cubicaFont(num, x, y, size) {
         x: coord[0],
         y: coord[1],
         size: size,
-        number: Number(num.toString()[[0]]),
+        number: Number(numToString(num)[[0]]),
         next: {}
     }
 
-    obj.next = _cubicaFont(1, num.toString(), coord[0], coord[1], size, obj);
+    obj.next = _cubicaFont(1, numToString(num), coord[0], coord[1], size, obj);
     return obj
 }
 
@@ -107,6 +114,11 @@ function cubicaScalers(num) {
     let sizeScaler;
 
     switch (num) {
+        case 0:
+            xScaler = 0.7;
+            yScaler = 0.7;
+            sizeScaler = 0.35;
+            break;
         case 1:
             xScaler = 0.4;
             yScaler = 0.4;
