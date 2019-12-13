@@ -1,5 +1,5 @@
 window.onload = function () {
-    const data = [[64, 33333, 22222, 111111]];
+    const data = [[73, 33333, 22222, 111111]];
 
     fatfonts(data);
 };
@@ -135,6 +135,11 @@ function cubicaScalers(num) {
         case 6:
             xScaler = 0.65;
             yScaler = 0.45;
+            sizeScaler = 0.3;
+            break;
+        case 7:
+            xScaler = 0.3;
+            yScaler = 0.3;
             sizeScaler = 0.3;
             break;
 
