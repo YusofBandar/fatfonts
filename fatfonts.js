@@ -1,5 +1,5 @@
 window.onload = function () {
-    const data = [[312, 32,]];
+    const data = [[44444, 33333,22222,111111]];
 
     fatfonts(data);
 };
@@ -101,7 +101,7 @@ function _cubicaFont(pos, num, x, y, size, parent) {
 
 function cubicaScalers(num) {
     num = Number(num);
-
+    console.log(num);
     let xScaler;
     let yScaler;
     let sizeScaler;
@@ -116,10 +116,18 @@ function cubicaScalers(num) {
             xScaler = 0.65;
             yScaler = 0.45;
             sizeScaler = 0.35;
+            break;
         case 3:
             xScaler = 0.9;
             yScaler = 0.45;
             sizeScaler = 0.35;
+            break;
+        case 4:
+            xScaler = 0.75;
+            yScaler = 0.78;
+            sizeScaler = 0.3;
+            break;
+
     }
 
     return [xScaler, yScaler, sizeScaler];
