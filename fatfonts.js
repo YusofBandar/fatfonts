@@ -1,5 +1,5 @@
 window.onload = function () {
-    const data = [[11, 1, 11, 11, 1, 1, 111, 11]];
+    const data = [[21, 2, 1]];
 
     fatfonts(data);
 };
@@ -25,9 +25,9 @@ function fatfonts(data) {
 
             for (let j = 0; j < data[i].length; j++) {
                 let pos = cubicaFont(data[i][j], j, i, size);
+                console.log(pos);
                 let group = svg.append("g");
-
-                drawFont(group, numbers[0], pos)
+                drawFont(group, numbers, pos)
             }
         }
     })
@@ -36,11 +36,11 @@ function fatfonts(data) {
 
 
 
-function drawFont(node, svg, number) {
+function drawFont(node, svgs, number) {
     let next = number
 
     while (next) {
-        let num = node.append("g").html(svg);
+        let num = node.append("g").html(svgs[next.number-1]);
         num.select("svg")
             .attr("x", next.x)
             .attr("y", next.y)
@@ -70,6 +70,7 @@ function cubicaFont(num, x, y, size) {
         x: coord[0],
         y: coord[1],
         size: size,
+        number: Number(num.toString()[[0]]),
         next: {}
     }
 
@@ -81,14 +82,13 @@ function _cubicaFont(pos, num, x, y, size) {
     if (pos >= num.length || pos >= 5) return
 
     //TODO need to work out scalers for other numbers
-    const xScaler = 0.4;
-    const yScaler = 0.4;
-    const sizeScaler = 0.35;
+    const scalers = cubicaScalers(num[pos]);
 
     let obj = {
-        x: (x + size) - (size * xScaler),
-        y: (y + size) - (size * yScaler),
-        size: size * sizeScaler
+        x: (x + size) - (size * scalers[0]),
+        y: (y + size) - (size * scalers[1]),
+        size: size * scalers[2],
+        number: Number(num[pos])
     }
 
     let next = _cubicaFont(pos + 1, num, obj.x, obj.y, obj.size);
@@ -96,6 +96,28 @@ function _cubicaFont(pos, num, x, y, size) {
         obj.next = next;
     }
     return obj;
+}
+
+function cubicaScalers(num) {
+    num = Number(num);
+
+    let xScaler;
+    let yScaler;
+    let sizeScaler;
+
+    switch (num) {
+        case 1:
+            xScaler = 0.4;
+            yScaler = 0.4;
+            sizeScaler = 0.35;
+            break;
+        case 2:
+            xScaler = 0.65;
+            yScaler = 0.45;
+            sizeScaler = 0.35;
+    }
+
+    return [xScaler, yScaler, sizeScaler];
 }
 
 function loadFont(font) {
