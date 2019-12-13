@@ -1,5 +1,5 @@
 window.onload = function () {
-    const data = [[21, 2, 1]];
+    const data = [[122, 2, 1]];
 
     fatfonts(data);
 };
@@ -74,24 +74,25 @@ function cubicaFont(num, x, y, size) {
         next: {}
     }
 
-    obj.next = _cubicaFont(1, num.toString(), coord[0], coord[1], size);
+    obj.next = _cubicaFont(1, num.toString(), coord[0], coord[1], size, obj);
     return obj
 }
 
-function _cubicaFont(pos, num, x, y, size) {
+function _cubicaFont(pos, num, x, y, size, parent) {
     if (pos >= num.length || pos >= 5) return
 
     //TODO need to work out scalers for other numbers
-    const scalers = cubicaScalers(num[pos]);
+    const scalers = cubicaScalers(num[pos - 1]);
 
     let obj = {
         x: (x + size) - (size * scalers[0]),
         y: (y + size) - (size * scalers[1]),
         size: size * scalers[2],
-        number: Number(num[pos])
+        number: Number(num[pos]),
+        parent: parent
     }
 
-    let next = _cubicaFont(pos + 1, num, obj.x, obj.y, obj.size);
+    let next = _cubicaFont(pos + 1, num, obj.x, obj.y, obj.size, obj);
     if (next) {
         obj.next = next;
     }
