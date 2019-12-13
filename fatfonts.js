@@ -1,13 +1,20 @@
 window.onload = function () {
-    const data = [[1, 2, 3, 111111]];
+    const data = [];
+
+    for(let i=0;i<10;i++){
+        let d =[];
+        for(let j=0;j<20;j++)
+            d.push(Math.floor(Math.random() * (50 - 1)) + 1)
+        data.push(d);
+    }
 
     fatfonts(data);
 };
 
 
 function fatfonts(data) {
-    const width = 1000;
-    const height = 1000;
+    const width = 2000;
+    const height = 2000;
 
     const xLength = data.length;
 
@@ -20,12 +27,12 @@ function fatfonts(data) {
     let files = loadFont("cubica")
     Promise.all(files).then((svgs) => {
         for (let i = 0; i < xLength; i++) {
-            let size = sizeNums(data[i].length, 1, width, height);
+            let size = sizeNums(data[i].length, 1, 1000, 1000);
             size = Math.min(size[0], size[1]);
 
             for (let j = 0; j < data[i].length; j++) {
                 let font = cubicaFont(data[i][j], j, i, size);
-                console.log(font);
+               
                 let group = svg.append("g");
                 drawFont(group, svgs, font)
             }
