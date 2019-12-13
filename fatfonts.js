@@ -1,10 +1,10 @@
 window.onload = function () {
     const data = [];
 
-    for(let i=0;i<10;i++){
-        let d =[];
-        for(let j=0;j<20;j++)
-            d.push(Math.floor(Math.random() * (50 - 1)) + 1)
+    for (let i = 0; i < 10; i++) {
+        let d = [];
+        for (let j = 0; j < 20; j++)
+            d.push(Math.floor(Math.random() * (50 - 10)) + 10)
         data.push(d);
     }
 
@@ -31,8 +31,8 @@ function fatfonts(data) {
             size = Math.min(size[0], size[1]);
 
             for (let j = 0; j < data[i].length; j++) {
-                let font = cubicaFont(data[i][j], j, i, size);
-               
+                let font = cubicaFont(data[i][j], { x: j, y: i, size: size, padding:10 });
+
                 let group = svg.append("g");
                 drawFont(group, svgs, font)
             }
@@ -47,7 +47,7 @@ function drawFont(node, svgs, font) {
     let next = font;
 
     while (next) {
-        if(node.number === 0) continue;
+        if (node.number === 0) continue;
 
         let num = node.append("g").html(svgs[next.number - 1]);
         num.select("svg")
@@ -72,14 +72,17 @@ function positionNums(x, y, size) {
     return [xPos, yPos];
 }
 
-function numToString(num){
+function numToString(num) {
     let str = num.toString();
-    return str.length <=1 ? "0" + str : str;
+    return str.length <= 1 ? "0" + str : str;
 }
 
-function cubicaFont(num, x, y, size) {
+function cubicaFont(num, config) {
+    ({ x, y, size, padding } = config);
+
     let coord = positionNums(x, y, size);
 
+    if("padding" in config) size = size - padding;
     let obj = {
         x: coord[0],
         y: coord[1],
@@ -88,7 +91,7 @@ function cubicaFont(num, x, y, size) {
         next: {}
     }
 
-    obj.next = _cubicaFont(1, numToString(num), coord[0], coord[1], size, obj);
+    obj.next = _cubicaFont(1, numToString(num), coord[0], coord[1], size , obj);
     return obj
 }
 
