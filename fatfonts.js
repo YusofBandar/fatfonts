@@ -18,16 +18,16 @@ function fatfonts(data) {
         .attr("viewBox", "0 0 1000 1000");
 
     let files = loadFont("cubica")
-    Promise.all(files).then((numbers) => {
+    Promise.all(files).then((svgs) => {
         for (let i = 0; i < xLength; i++) {
             let size = sizeNums(data[i].length, 1, width, height);
             size = Math.min(size[0], size[1]);
 
             for (let j = 0; j < data[i].length; j++) {
-                let pos = cubicaFont(data[i][j], j, i, size);
-                console.log(pos);
+                let font = cubicaFont(data[i][j], j, i, size);
+
                 let group = svg.append("g");
-                drawFont(group, numbers, pos)
+                drawFont(group, svgs, font)
             }
         }
     })
@@ -36,11 +36,11 @@ function fatfonts(data) {
 
 
 
-function drawFont(node, svgs, number) {
-    let next = number
+function drawFont(node, svgs, font) {
+    let next = font;
 
     while (next) {
-        let num = node.append("g").html(svgs[next.number-1]);
+        let num = node.append("g").html(svgs[next.number - 1]);
         num.select("svg")
             .attr("x", next.x)
             .attr("y", next.y)
@@ -120,10 +120,10 @@ function cubicaScalers(num) {
     return [xScaler, yScaler, sizeScaler];
 }
 
-function loadFont(font) {
-    let fonts;
-    if (font === "cubica") fonts = cubica;
-    return files = [1, 2, 3, 4, 5, 6, 7, 8, 9].map(num => fonts(num));
+function loadFont(fontType) {
+    let svgFunc;
+    if (fontType === "cubica") svgFunc = cubica;
+    return files = [1, 2, 3, 4, 5, 6, 7, 8, 9].map(num => svgFunc(num));
 }
 
 function cubica(num) {
