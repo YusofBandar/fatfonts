@@ -54,8 +54,8 @@ function attachCanvas(id, width, height) {
 }
 
 function fatfontsCanvas(data) {
-    const width = 2000;
-    const height = 1000;
+    const width = 5000;
+    const height = 5000;
     const xLength = data.length;
 
     let canvas = attachCanvas("fatfonts", width, height);
@@ -63,12 +63,12 @@ function fatfontsCanvas(data) {
 
     const files = [1, 2, 3, 4, 5, 6, 7, 8, 9].map(num => cubicaPath(num));
     for (let i = 0; i < xLength; i++) {
-        let size = sizeNums(data[i].length, 1, 1000, 1000);
+        let size = sizeNums(data[i].length, 1, width, height);
         size = Math.min(size[0], size[1]);
 
         for (let j = 0; j < data[i].length; j++) {
             setTimeout(() => {
-                let font = cubicaFont(data[i][j], { x: j, y: i, size: size, padding: 10 });
+                let font = cubicaFont(data[i][j], { x: j, y: i, size: size, padding: 5 });
                 drawFontCanvas(ctx, files, font);
             }, 0)
         }
