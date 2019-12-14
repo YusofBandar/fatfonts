@@ -1,13 +1,12 @@
 window.onload = function () {
     const data = [];
 
-    for (let i = 0; i < 20; i++) {
+    for (let i = 0; i < 50; i++) {
         let d = [];
-        for (let j = 0; j < 40; j++)
+        for (let j = 0; j < 70; j++)
             d.push(Math.floor(Math.random() * (50 - 10)) + 10)
         data.push(d);
     }
-
     fatfontsCanvas(data);
 };
 
@@ -15,14 +14,9 @@ window.onload = function () {
 function fatfonts(data) {
     const width = 1000;
     const height = 500;
-
     const xLength = data.length;
 
-    let svg = d3.select("#fatfonts")
-        .append("svg")
-        .attr("width", width)
-        .attr("height", height)
-        .attr("viewBox", "0 0 1000 1000");
+    let svg = attachSvg("fatfonts", width, height)
 
     let files = loadFont("cubica")
     Promise.all(files).then((svgs) => {
@@ -31,7 +25,6 @@ function fatfonts(data) {
             size = Math.min(size[0], size[1]);
 
             for (let j = 0; j < data[i].length; j++) {
-
                 setTimeout(() => {
                     let font = cubicaFont(data[i][j], { x: j, y: i, size: size, padding: 10 });
                     let group = svg.append("g");
@@ -42,39 +35,45 @@ function fatfonts(data) {
     })
 }
 
-function fatfontsCanvas(data) {
-    const width = 2000;
-    const height = 1000;
+function attachSvg(id, width, height) {
+    let svg = d3.select("#" + id)
+        .append("svg")
+        .attr("width", width)
+        .attr("height", height)
+        .attr("viewBox", "0 0 1000 1000");
+    return svg;
+}
 
-    const xLength = data.length;
-
-    let canvas = d3.select("#fatfonts")
+function attachCanvas(id, width, height) {
+    let canvas = d3.select("#" + id)
         .append("canvas")
         .attr("width", width)
         .attr("height", height);
 
+    return canvas;
+}
+
+function fatfontsCanvas(data) {
+    const width = 2000;
+    const height = 1000;
+    const xLength = data.length;
+
+    let canvas = attachCanvas("fatfonts", width, height);
     let ctx = canvas.node().getContext("2d");
 
     const files = [1, 2, 3, 4, 5, 6, 7, 8, 9].map(num => cubicaPath(num));
-
     for (let i = 0; i < xLength; i++) {
         let size = sizeNums(data[i].length, 1, 1000, 1000);
         size = Math.min(size[0], size[1]);
 
         for (let j = 0; j < data[i].length; j++) {
-
             setTimeout(() => {
                 let font = cubicaFont(data[i][j], { x: j, y: i, size: size, padding: 10 });
-
                 drawFontCanvas(ctx, files, font);
             }, 0)
         }
     }
 }
-
-
-
-
 
 function drawFont(node, svgs, font) {
     let next = font;
@@ -144,7 +143,6 @@ function cubicaFont(num, config) {
 function _cubicaFont(pos, num, x, y, size, parent) {
     if (pos >= num.length || pos >= 5) return
 
-    //TODO need to work out scalers for other numbers
     const scalers = cubicaScalers(num[pos - 1]);
 
     let obj = {
@@ -156,10 +154,26 @@ function _cubicaFont(pos, num, x, y, size, parent) {
     }
 
     let next = _cubicaFont(pos + 1, num, obj.x, obj.y, obj.size, obj);
-    if (next) {
-        obj.next = next;
-    }
+    if (next) obj.next = next;
+
     return obj;
+}
+
+function loadFont(fontType) {
+    let svgFunc;
+    if (fontType === "cubica") svgFunc = cubica;
+    return files = [1, 2, 3, 4, 5, 6, 7, 8, 9].map(num => svgFunc(num));
+}
+
+function cubica(num) {
+    const path = cubicaPath(num);
+    return d3.text(path);
+}
+
+function cubicaPath(num) {
+    const file = `cubica_${num}.svg`;
+    const path = "./fonts/cubica/";
+    return path + file;
 }
 
 function cubicaScalers(num) {
@@ -220,26 +234,6 @@ function cubicaScalers(num) {
             yScaler = 0.8;
             sizeScaler = 0.3;
             break;
-
     }
-
     return [xScaler, yScaler, sizeScaler];
 }
-
-function loadFont(fontType) {
-    let svgFunc;
-    if (fontType === "cubica") svgFunc = cubica;
-    return files = [1, 2, 3, 4, 5, 6, 7, 8, 9].map(num => svgFunc(num));
-}
-
-function cubica(num) {
-    const path = cubicaPath(num);
-    return d3.text(path);
-}
-
-function cubicaPath(num) {
-    const file = `cubica_${num}.svg`;
-    const path = "./fonts/cubica/";
-    return path + file;
-}
-
