@@ -1,13 +1,16 @@
+
+let cubica;
+
 window.onload = function () {
 
-    let img = document.getElementById('my-image');
+    /*let img = document.getElementById('my-image');
     let canvas = document.createElement('canvas');
     canvas.width = img.width;
     canvas.height = img.height;
     canvas.getContext('2d').drawImage(img, 0, 0, img.width, img.height);
 
     const pixel = canvas.getContext('2d').getImageData(0, 0, img.width, img.height);
-
+    
     var x = d3.scaleLinear()
         .domain([0, 255])
         .range([1, 99]);
@@ -16,24 +19,37 @@ window.onload = function () {
     let d = [];
     for (let i = 0; i < pixel.width * pixel.height * 4; i = i + 4) {
         d.push(x(pixel.data[i]));
+
         if (i !== 0 && i % (pixel.width * 4) === 0) {
             data.push(d);
             d = [];
             continue;
         }
+    }*/
+
+    cubica = font()
+    .path(cubicaPath)
+    .scaler(cubicaScalers)();
+
+    let data = [];
+    for (let i = 0; i < 20; i++) {
+        let d = [];
+        for (let j = 0; j < 40; j++)
+            d.push(Math.floor(Math.random() * (50 - 10)) + 10)
+        data.push(d);
     }
-    fatfontsCanvas(data);
+    fatfonts(data);
 };
 
 
 function fatfonts(data) {
     const width = 1000;
-    const height = 500;
+    const height = 1000;
     const xLength = data.length;
 
     let svg = attachSvg("fatfonts", width, height)
 
-    let files = loadFont("cubica")
+    let files =  [1, 2, 3, 4, 5, 6, 7, 8, 9].map(num => cubica.svg(num));
     Promise.all(files).then((svgs) => {
         for (let i = 0; i < xLength; i++) {
             let size = sizeNums(data[i].length, 1, 1000, 1000);
@@ -158,7 +174,7 @@ function cubicaFont(num, config) {
 function _cubicaFont(pos, num, x, y, size, parent) {
     if (pos >= num.length || pos >= 5) return
 
-    const scalers = cubicaScalers(num[pos - 1]);
+    const scalers = cubica.scaler(num[pos - 1]);
 
     let obj = {
         x: (x + size) - (size * scalers[0]),
@@ -172,17 +188,6 @@ function _cubicaFont(pos, num, x, y, size, parent) {
     if (next) obj.next = next;
 
     return obj;
-}
-
-function loadFont(fontType) {
-    let svgFunc;
-    if (fontType === "cubica") svgFunc = cubica;
-    return files = [1, 2, 3, 4, 5, 6, 7, 8, 9].map(num => svgFunc(num));
-}
-
-function cubica(num) {
-    const path = cubicaPath(num);
-    return d3.text(path);
 }
 
 function cubicaPath(num) {

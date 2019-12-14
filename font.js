@@ -2,18 +2,22 @@ import { required } from "./util/accessors.js";
 
 export default function () {
 
-    let svg = "",
+    let path = "",
         scaler = [0, 0, 0, 0];
 
     function font() {
         return {
-            svgs: font.svgs,
-            scaler: font.scaler
+            svg : svg,
+            scaler : scaler
         };
     }
 
-    font.svg = function (x) {
-        return arguments.length ? (svg = required(x), font) : svg;
+    function svg(num) {
+        return d3.text(path(num));
+    }
+
+    font.path = function (x) {
+        return arguments.length ? (path = required(x), font) : path;
     };
 
     font.scaler = function (x) {
