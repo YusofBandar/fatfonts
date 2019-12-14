@@ -57,7 +57,7 @@ function fatfonts(data) {
 
             for (let j = 0; j < data[i].length; j++) {
                 setTimeout(() => {
-                    let font = cubicaFont(data[i][j], { x: j, y: i, size: size, padding: 10 });
+                    let font = positionFont(data[i][j], { x: j, y: i, size: size, padding: 10 });
                     let group = svg.append("g");
                     drawFont(group, svgs, font)
                 }, 0)
@@ -99,7 +99,7 @@ function fatfontsCanvas(data) {
 
         for (let j = 0; j < data[i].length; j++) {
             setTimeout(() => {
-                let font = cubicaFont(data[i][j], { x: j, y: i, size: size, padding: 0 });
+                let font = positionFont(data[i][j], { x: j, y: i, size: size, padding: 0 });
                 drawFontCanvas(ctx, files, font);
             }, 0)
         }
@@ -153,7 +153,7 @@ function numToString(num) {
     return str.length <= 1 ? "0" + str : str;
 }
 
-function cubicaFont(num, config) {
+function positionFont(num, config) {
     ({ x, y, size, padding } = config);
 
     let coord = positionNums(x, y, size);
@@ -167,11 +167,11 @@ function cubicaFont(num, config) {
         next: {}
     }
 
-    obj.next = _cubicaFont(1, numToString(num), coord[0], coord[1], size, obj);
+    obj.next = _positionFont(1, numToString(num), coord[0], coord[1], size, obj);
     return obj
 }
 
-function _cubicaFont(pos, num, x, y, size, parent) {
+function _positionFont(pos, num, x, y, size, parent) {
     if (pos >= num.length || pos >= 5) return
 
     const scalers = cubica.scaler(num[pos - 1]);
@@ -184,7 +184,7 @@ function _cubicaFont(pos, num, x, y, size, parent) {
         parent: parent
     }
 
-    let next = _cubicaFont(pos + 1, num, obj.x, obj.y, obj.size, obj);
+    let next = _positionFont(pos + 1, num, obj.x, obj.y, obj.size, obj);
     if (next) obj.next = next;
 
     return obj;
