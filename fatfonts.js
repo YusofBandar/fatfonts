@@ -1,14 +1,14 @@
 window.onload = function () {
     const data = [];
 
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < 20; i++) {
         let d = [];
-        for (let j = 0; j < 10; j++)
+        for (let j = 0; j < 40; j++)
             d.push(Math.floor(Math.random() * (50 - 10)) + 10)
         data.push(d);
     }
 
-    fatfonts(data);
+    fatfontsCanvas(data);
 };
 
 
@@ -40,8 +40,39 @@ function fatfonts(data) {
             }
         }
     })
-
 }
+
+function fatfontsCanvas(data) {
+    const width = 2000;
+    const height = 1000;
+
+    const xLength = data.length;
+
+    let canvas = d3.select("#fatfonts")
+        .append("canvas")
+        .attr("width", width)
+        .attr("height", height);
+
+    let ctx = canvas.node().getContext("2d");
+
+    const files = [1, 2, 3, 4, 5, 6, 7, 8, 9].map(num => cubicaPath(num));
+
+    for (let i = 0; i < xLength; i++) {
+        let size = sizeNums(data[i].length, 1, 1000, 1000);
+        size = Math.min(size[0], size[1]);
+
+        for (let j = 0; j < data[i].length; j++) {
+
+            setTimeout(() => {
+                let font = cubicaFont(data[i][j], { x: j, y: i, size: size, padding: 10 });
+
+                drawFontCanvas(ctx, files, font);
+            }, 0)
+        }
+    }
+}
+
+
 
 
 
@@ -49,17 +80,30 @@ function drawFont(node, svgs, font) {
     let next = font;
 
     while (next) {
-        if (node.number === 0) continue;
-
-        let num = node.append("g").html(svgs[next.number - 1]);
-        num.select("svg")
-            .attr("x", next.x)
-            .attr("y", next.y)
-            .attr("width", next.size)
-            .attr("height", next.size);
+        if (next.number !== 0) {
+            let num = node.append("g").html(svgs[next.number - 1]);
+            num.select("svg")
+                .attr("x", next.x)
+                .attr("y", next.y)
+                .attr("width", next.size)
+                .attr("height", next.size);
+        }
         next = next.next;
     }
+}
 
+function drawFontCanvas(ctx, svgs, font) {
+    let next = font;
+
+    while (next) {
+        if (next.number !== 0) {
+            let img = new Image();
+            const pos = next;
+            img.onload = () => { ctx.drawImage(img, pos.x, pos.y, pos.size, pos.size); }
+            img.src = svgs[next.number - 1];
+        }
+        next = next.next;
+    }
 }
 
 function sizeNums(xLength, yLength, width, height) {
@@ -189,8 +233,13 @@ function loadFont(fontType) {
 }
 
 function cubica(num) {
+    const path = cubicaPath(num);
+    return d3.text(path);
+}
+
+function cubicaPath(num) {
     const file = `cubica_${num}.svg`;
     const path = "./fonts/cubica/";
-    return d3.text(path + file);
+    return path + file;
 }
 
