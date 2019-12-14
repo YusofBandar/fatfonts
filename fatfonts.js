@@ -1,11 +1,26 @@
 window.onload = function () {
-    const data = [];
 
-    for (let i = 0; i < 50; i++) {
-        let d = [];
-        for (let j = 0; j < 70; j++)
-            d.push(Math.floor(Math.random() * (50 - 10)) + 10)
-        data.push(d);
+    let img = document.getElementById('my-image');
+    let canvas = document.createElement('canvas');
+    canvas.width = img.width;
+    canvas.height = img.height;
+    canvas.getContext('2d').drawImage(img, 0, 0, img.width, img.height);
+
+    const pixel = canvas.getContext('2d').getImageData(0, 0, img.width, img.height);
+
+    var x = d3.scaleLinear()
+        .domain([0, 255])
+        .range([1, 99]);
+
+    let data = [];
+    let d = [];
+    for (let i = 0; i < pixel.width * pixel.height * 4; i = i + 4) {
+        d.push(x(pixel.data[i]));
+        if (i !== 0 && i % (pixel.width * 4) === 0) {
+            data.push(d);
+            d = [];
+            continue;
+        }
     }
     fatfontsCanvas(data);
 };
@@ -68,7 +83,7 @@ function fatfontsCanvas(data) {
 
         for (let j = 0; j < data[i].length; j++) {
             setTimeout(() => {
-                let font = cubicaFont(data[i][j], { x: j, y: i, size: size, padding: 5 });
+                let font = cubicaFont(data[i][j], { x: j, y: i, size: size, padding: 0 });
                 drawFontCanvas(ctx, files, font);
             }, 0)
         }
