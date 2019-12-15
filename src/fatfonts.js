@@ -1,5 +1,5 @@
-import constant, { constantZero } from "./util/constant.js";
-import { required } from "./util/accessors.js";
+import constant, { constantZero } from "../util/constant.js";
+import { required } from "../util/accessors.js";
 
 export default function () {
     let padding = constantZero,

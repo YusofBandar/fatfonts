@@ -1,4 +1,4 @@
-import { required } from "./util/accessors.js";
+import { required } from "../util/accessors.js";
 
 export default function () {
 
