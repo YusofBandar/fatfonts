@@ -1,6 +1,3 @@
-
-let cubica;
-
 window.onload = function () {
 
     /*let img = document.getElementById('my-image');
@@ -27,11 +24,27 @@ window.onload = function () {
         }
     }*/
 
-    cubica = font()
+    const width = 800;
+    const height = 800;
+
+    let canvas = d3.select("#fatfonts")
+        .append("canvas")
+        .attr("width", width)
+        .attr("height", height);
+
+    /*let svg = d3.select("#fatfonts").append("svg")
+        .attr("width", width)
+        .attr("height", height)
+        .attr("viewBox", `0 0 ${width} ${height}`);*/
+
+    let cubica = font()
         .path(cubicaPath)
         .scaler(cubicaScalers);
 
-
+    let cubFatfont = fatfonts()
+        .size([width, height])
+        .padding(0)
+        .font(cubica);
 
     let data = [];
     for (let i = 0; i < 20; i++) {
@@ -41,18 +54,12 @@ window.onload = function () {
         data.push(d);
     }
 
-    let cubFatfont = fatfonts()
-        .size([2000, 2000])
-        .padding(0)
-        .font(cubica);
-
     let el = draw()
-        .size([2000,2000])
         .font(cubica)
-        .node(d3.select("#fatfonts"));
-    //el.canvas(cubFatfont(data));
+        .node(canvas);
 
-    el.svg(cubFatfont(data));
+    el.canvas(cubFatfont(data));
+    //el.svg(cubFatfont(data));
 };
 
 

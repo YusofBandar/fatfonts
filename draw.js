@@ -3,9 +3,7 @@ import { required } from "./util/accessors.js";
 
 export default function () {
     let font = null,
-        node = null,
-        dx = 1,
-        dy = 1;
+        node = null;
 
     function draw(data) {
         draw.svg(data);
@@ -44,11 +42,8 @@ export default function () {
         font = font();
         node = node();
 
-        let canvas = node.append("canvas")
-            .attr("width", dx)
-            .attr("height", dy);
-
-        let ctx = canvas.node().getContext("2d");
+    
+        let ctx = node.node().getContext("2d");
 
         const files = [1, 2, 3, 4, 5, 6, 7, 8, 9].map(num => font.path(num));
         for (let i = 0; i < data.length; i++) {
@@ -64,17 +59,12 @@ export default function () {
         font = font();
         node = node();
 
-        let svg = node.append("svg")
-            .attr("width", dx)
-            .attr("height", dy)
-            .attr("viewBox", `0 0 ${dx} ${dy}`);
-
         const files = [1, 2, 3, 4, 5, 6, 7, 8, 9].map(num => font.svg(num));
         Promise.all(files).then((svgs) => {
             for (let i = 0; i < data.length; i++) {
                 for (let j = 0; j < data[i].length; j++) {
                     setTimeout(() => {
-                        let group = svg.append("g");
+                        let group = node.append("g");
                         drawNum(group, svgs, data[i][j]);
                     }, 0)
                 }
@@ -88,10 +78,6 @@ export default function () {
 
     draw.node = function (x) {
         return arguments.length ? (node = typeof x === "function" ? x : constant(x), draw) : node;
-    };
-
-    draw.size = function (x) {
-        return arguments.length ? (dx = +x[0], dy = +x[1], draw) : [dx, dy];
     };
 
     return draw;
