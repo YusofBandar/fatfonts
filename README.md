@@ -2,6 +2,7 @@
 
 FatFonts is a graphical technique conceived and developed by Miguel Nacenta, Uta Hinrichs, and Sheelagh Carpendale. See http://fatfonts.org/ more info. This repo uses d3 to take any 2d array of values and outputs fatfonts. 
 
+ ![Record](https://github.com/YusofBandar/fatfonts/blob/master/docs/moon.JPG)
 
 ### Structure
 
