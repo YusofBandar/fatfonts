@@ -29,58 +29,32 @@ window.onload = function () {
 
     cubica = font()
         .path(cubicaPath)
-        .scaler(cubicaScalers)();
+        .scaler(cubicaScalers);
 
 
 
     let data = [];
     for (let i = 0; i < 20; i++) {
         let d = [];
-        for (let j = 0; j < 40; j++)
-            d.push(Math.floor(Math.random() * (50 - 10)) + 10)
+        for (let j = 0; j < 20; j++)
+            d.push(Math.floor(Math.random() * (99 - 1)) + 1)
         data.push(d);
     }
 
     let cubFatfont = fatfonts()
-        .size([2000, 1000])
-        .padding(20)
-        .font(font()
-            .path(cubicaPath)
-            .scaler(cubicaScalers));
+        .size([2000, 2000])
+        .padding(0)
+        .font(cubica);
 
-    let pos = cubFatfont(data);
-    drawing(pos);
+    let el = draw()
+        .size([2000,2000])
+        .font(cubica)
+        .node(d3.select("#fatfonts"));
+    
+    el(cubFatfont(data));
 };
 
 
-function drawing(data) {
-    const width = 1000;
-    const height = 1000;
-    const xLength = data.length;
-
-    let svg = attachSvg("fatfonts", width, height)
-
-    let files = [1, 2, 3, 4, 5, 6, 7, 8, 9].map(num => cubica.svg(num));
-    Promise.all(files).then((svgs) => {
-        for (let i = 0; i < xLength; i++) {
-            for (let j = 0; j < data[i].length; j++) {
-                setTimeout(() => {
-                    let group = svg.append("g");
-                    drawFont(group, svgs, data[i][j])
-                }, 0)
-            }
-        }
-    })
-}
-
-function attachSvg(id, width, height) {
-    let svg = d3.select("#" + id)
-        .append("svg")
-        .attr("width", width)
-        .attr("height", height)
-        .attr("viewBox", "0 0 1000 1000");
-    return svg;
-}
 
 function attachCanvas(id, width, height) {
     let canvas = d3.select("#" + id)
@@ -113,20 +87,6 @@ function fatfontsCanvas(data) {
     }
 }
 
-function drawFont(node, svgs, font) {
-    let next = font;
-    while (next) {
-        if (next.number !== 0) {
-            let num = node.append("g").html(svgs[next.number - 1]);
-            num.select("svg")
-                .attr("x", next.x)
-                .attr("y", next.y)
-                .attr("width", next.dx)
-                .attr("height", next.dx);
-        }
-        next = next.next;
-    }
-}
 
 function drawFontCanvas(ctx, svgs, font) {
     let next = font;
