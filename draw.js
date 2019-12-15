@@ -16,7 +16,7 @@ export default function () {
             .attr("height", dy)
             .attr("viewBox", `0 0 ${dx} ${dy}`);
 
-        let files = [1, 2, 3, 4, 5, 6, 7, 8, 9].map(num => font.svg(num));
+        const files = [1, 2, 3, 4, 5, 6, 7, 8, 9].map(num => font.svg(num));
         Promise.all(files).then((svgs) => {
             for (let i = 0; i < data.length; i++) {
                 for (let j = 0; j < data[i].length; j++) {
@@ -29,6 +29,26 @@ export default function () {
         })
     }
 
+    draw.canvas = function (data) {
+        font = font();
+        node = node();
+
+        let canvas = node.append("canvas")
+            .attr("width", dx)
+            .attr("height", dy);
+
+        let ctx = canvas.node().getContext("2d");
+
+        const files = [1, 2, 3, 4, 5, 6, 7, 8, 9].map(num => font.path(num));
+        for (let i = 0; i < data.length; i++) {
+            for (let j = 0; j < data[i].length; j++) {
+                setTimeout(() => {
+                    drawCanvasNum(ctx, files, data[i][j]);
+                }, 0)
+            }
+        }
+    }
+
     function drawNum(node, svgs, num) {
         let next = num;
         while (next) {
@@ -39,6 +59,20 @@ export default function () {
                     .attr("y", next.y)
                     .attr("width", next.dx)
                     .attr("height", next.dx);
+            }
+            next = next.next;
+        }
+    }
+
+    function drawCanvasNum(ctx, svgs, num) {
+        let next = num;
+
+        while (next) {
+            if (next.number !== 0) {
+                let img = new Image();
+                const pos = next;
+                img.onload = () => { ctx.drawImage(img, pos.x, pos.y, pos.dx, pos.dy); }
+                img.src = svgs[next.number - 1];
             }
             next = next.next;
         }

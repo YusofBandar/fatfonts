@@ -50,111 +50,11 @@ window.onload = function () {
         .size([2000,2000])
         .font(cubica)
         .node(d3.select("#fatfonts"));
-    
-    el(cubFatfont(data));
+    el.canvas(cubFatfont(data));
+
+    //el(cubFatfont(data));
 };
 
-
-
-function attachCanvas(id, width, height) {
-    let canvas = d3.select("#" + id)
-        .append("canvas")
-        .attr("width", width)
-        .attr("height", height);
-
-    return canvas;
-}
-
-function fatfontsCanvas(data) {
-    const width = 5000;
-    const height = 5000;
-    const xLength = data.length;
-
-    let canvas = attachCanvas("fatfonts", width, height);
-    let ctx = canvas.node().getContext("2d");
-
-    const files = [1, 2, 3, 4, 5, 6, 7, 8, 9].map(num => cubicaPath(num));
-    for (let i = 0; i < xLength; i++) {
-        let size = sizeNums(data[i].length, 1, width, height);
-        size = Math.min(size[0], size[1]);
-
-        for (let j = 0; j < data[i].length; j++) {
-            setTimeout(() => {
-                let font = positionFont(data[i][j], { x: j, y: i, size: size, padding: 0 });
-                drawFontCanvas(ctx, files, font);
-            }, 0)
-        }
-    }
-}
-
-
-function drawFontCanvas(ctx, svgs, font) {
-    let next = font;
-
-    while (next) {
-        if (next.number !== 0) {
-            let img = new Image();
-            const pos = next;
-            img.onload = () => { ctx.drawImage(img, pos.x, pos.y, pos.size, pos.size); }
-            img.src = svgs[next.number - 1];
-        }
-        next = next.next;
-    }
-}
-
-function sizeNums(xLength, yLength, width, height) {
-    const dx = width / xLength;
-    const dy = height / yLength;
-    return [dx, dy];
-}
-
-function positionNums(x, y, size) {
-    const xPos = x * size;
-    const yPos = y * size;
-    return [xPos, yPos];
-}
-
-function numToString(num) {
-    let str = num.toString();
-    return str.length <= 1 ? "0" + str : str;
-}
-
-function positionFont(num, config) {
-    ({ x, y, size, padding } = config);
-
-    let coord = positionNums(x, y, size);
-
-    if ("padding" in config) size = size - padding;
-    let obj = {
-        x: coord[0],
-        y: coord[1],
-        size: size,
-        number: Number(numToString(num)[[0]]),
-        next: {}
-    }
-
-    obj.next = _positionFont(1, numToString(num), coord[0], coord[1], size, obj);
-    return obj
-}
-
-function _positionFont(pos, num, x, y, size, parent) {
-    if (pos >= num.length || pos >= 5) return
-
-    const scalers = cubica.scaler(num[pos - 1]);
-
-    let obj = {
-        x: (x + size) - (size * scalers[0]),
-        y: (y + size) - (size * scalers[1]),
-        size: size * scalers[2],
-        number: Number(num[pos]),
-        parent: parent
-    }
-
-    let next = _positionFont(pos + 1, num, obj.x, obj.y, obj.size, obj);
-    if (next) obj.next = next;
-
-    return obj;
-}
 
 function cubicaPath(num) {
     const file = `cubica_${num}.svg`;

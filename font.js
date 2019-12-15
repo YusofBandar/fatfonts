@@ -8,7 +8,8 @@ export default function () {
     function font() {
         return {
             svg : svg,
-            scaler : scaler
+            scaler : scaler,
+            path : path
         };
     }
 

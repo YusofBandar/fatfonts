@@ -62,7 +62,7 @@ export default function () {
             parent: parent
         }
 
-        let next = _positionFont(pos + 1, num, font, node.x, node.y, node.dx, node.dy, node);
+        let next = _positionNumbers(pos + 1, num, font, node.x, node.y, node.dx, node.dy, node);
         if (next) node.next = next;
 
         return node;
