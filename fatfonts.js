@@ -33,8 +33,8 @@ export default function () {
 
         let coord = numberPosition(x, y, dx, dy);
 
-        dx -= padding();
-        dy -= padding();
+        dx -= padding() >= 0 ? padding() : 0;
+        dy -= padding() >= 0 ? padding() : 0;
 
         let node = {
             x: coord[0],
