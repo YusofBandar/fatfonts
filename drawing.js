@@ -50,9 +50,9 @@ window.onload = function () {
         .size([2000,2000])
         .font(cubica)
         .node(d3.select("#fatfonts"));
-    el.canvas(cubFatfont(data));
+    //el.canvas(cubFatfont(data));
 
-    //el(cubFatfont(data));
+    el.svg(cubFatfont(data));
 };
 
 

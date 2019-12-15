@@ -8,45 +8,7 @@ export default function () {
         dy = 1;
 
     function draw(data) {
-        font = font();
-        node = node();
-
-        let svg = node.append("svg")
-            .attr("width", dx)
-            .attr("height", dy)
-            .attr("viewBox", `0 0 ${dx} ${dy}`);
-
-        const files = [1, 2, 3, 4, 5, 6, 7, 8, 9].map(num => font.svg(num));
-        Promise.all(files).then((svgs) => {
-            for (let i = 0; i < data.length; i++) {
-                for (let j = 0; j < data[i].length; j++) {
-                    setTimeout(() => {
-                        let group = svg.append("g");
-                        drawNum(group, svgs, data[i][j]);
-                    }, 0)
-                }
-            }
-        })
-    }
-
-    draw.canvas = function (data) {
-        font = font();
-        node = node();
-
-        let canvas = node.append("canvas")
-            .attr("width", dx)
-            .attr("height", dy);
-
-        let ctx = canvas.node().getContext("2d");
-
-        const files = [1, 2, 3, 4, 5, 6, 7, 8, 9].map(num => font.path(num));
-        for (let i = 0; i < data.length; i++) {
-            for (let j = 0; j < data[i].length; j++) {
-                setTimeout(() => {
-                    drawCanvasNum(ctx, files, data[i][j]);
-                }, 0)
-            }
-        }
+        draw.svg(data);
     }
 
     function drawNum(node, svgs, num) {
@@ -76,6 +38,48 @@ export default function () {
             }
             next = next.next;
         }
+    }
+
+    draw.canvas = function (data) {
+        font = font();
+        node = node();
+
+        let canvas = node.append("canvas")
+            .attr("width", dx)
+            .attr("height", dy);
+
+        let ctx = canvas.node().getContext("2d");
+
+        const files = [1, 2, 3, 4, 5, 6, 7, 8, 9].map(num => font.path(num));
+        for (let i = 0; i < data.length; i++) {
+            for (let j = 0; j < data[i].length; j++) {
+                setTimeout(() => {
+                    drawCanvasNum(ctx, files, data[i][j]);
+                }, 0)
+            }
+        }
+    }
+
+    draw.svg = function (data) {
+        font = font();
+        node = node();
+
+        let svg = node.append("svg")
+            .attr("width", dx)
+            .attr("height", dy)
+            .attr("viewBox", `0 0 ${dx} ${dy}`);
+
+        const files = [1, 2, 3, 4, 5, 6, 7, 8, 9].map(num => font.svg(num));
+        Promise.all(files).then((svgs) => {
+            for (let i = 0; i < data.length; i++) {
+                for (let j = 0; j < data[i].length; j++) {
+                    setTimeout(() => {
+                        let group = svg.append("g");
+                        drawNum(group, svgs, data[i][j]);
+                    }, 0)
+                }
+            }
+        })
     }
 
     draw.font = function (x) {
