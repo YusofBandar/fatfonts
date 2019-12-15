@@ -28,8 +28,10 @@ window.onload = function () {
     }*/
 
     cubica = font()
-    .path(cubicaPath)
-    .scaler(cubicaScalers)();
+        .path(cubicaPath)
+        .scaler(cubicaScalers)();
+
+
 
     let data = [];
     for (let i = 0; i < 20; i++) {
@@ -38,28 +40,33 @@ window.onload = function () {
             d.push(Math.floor(Math.random() * (50 - 10)) + 10)
         data.push(d);
     }
-    fatfonts(data);
+
+    let cubFatfont = fatfonts()
+        .size([2000, 1000])
+        .padding(20)
+        .font(font()
+            .path(cubicaPath)
+            .scaler(cubicaScalers));
+
+    let pos = cubFatfont(data);
+    drawing(pos);
 };
 
 
-function fatfonts(data) {
+function drawing(data) {
     const width = 1000;
     const height = 1000;
     const xLength = data.length;
 
     let svg = attachSvg("fatfonts", width, height)
 
-    let files =  [1, 2, 3, 4, 5, 6, 7, 8, 9].map(num => cubica.svg(num));
+    let files = [1, 2, 3, 4, 5, 6, 7, 8, 9].map(num => cubica.svg(num));
     Promise.all(files).then((svgs) => {
         for (let i = 0; i < xLength; i++) {
-            let size = sizeNums(data[i].length, 1, 1000, 1000);
-            size = Math.min(size[0], size[1]);
-
             for (let j = 0; j < data[i].length; j++) {
                 setTimeout(() => {
-                    let font = positionFont(data[i][j], { x: j, y: i, size: size, padding: 10 });
                     let group = svg.append("g");
-                    drawFont(group, svgs, font)
+                    drawFont(group, svgs, data[i][j])
                 }, 0)
             }
         }
@@ -108,15 +115,14 @@ function fatfontsCanvas(data) {
 
 function drawFont(node, svgs, font) {
     let next = font;
-
     while (next) {
         if (next.number !== 0) {
             let num = node.append("g").html(svgs[next.number - 1]);
             num.select("svg")
                 .attr("x", next.x)
                 .attr("y", next.y)
-                .attr("width", next.size)
-                .attr("height", next.size);
+                .attr("width", next.dx)
+                .attr("height", next.dx);
         }
         next = next.next;
     }
