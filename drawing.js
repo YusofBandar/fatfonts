@@ -27,15 +27,15 @@ window.onload = function () {
     const width = 800;
     const height = 800;
 
-    let canvas = d3.select("#fatfonts")
+    /*let canvas1 = d3.select("#fatfonts")
         .append("canvas")
         .attr("width", width)
-        .attr("height", height);
+        .attr("height", height);*/
 
-    /*let svg = d3.select("#fatfonts").append("svg")
+    let svg = d3.select("#fatfonts").append("svg")
         .attr("width", width)
         .attr("height", height)
-        .attr("viewBox", `0 0 ${width} ${height}`);*/
+        .attr("viewBox", `0 0 ${width} ${height}`);
 
     let cubica = font()
         .path(cubicaPath)
@@ -46,6 +46,10 @@ window.onload = function () {
         .padding(0)
         .font(cubica);
 
+    let el = draw()
+        .font(cubica)
+        .node(svg);
+
     let data = [];
     for (let i = 0; i < 20; i++) {
         let d = [];
@@ -54,12 +58,8 @@ window.onload = function () {
         data.push(d);
     }
 
-    let el = draw()
-        .font(cubica)
-        .node(canvas);
-
-    el.canvas(cubFatfont(data));
-    //el.svg(cubFatfont(data));
+    //el.canvas(cubFatfont(data));
+    el.svg(cubFatfont(data));
 };
 
 
